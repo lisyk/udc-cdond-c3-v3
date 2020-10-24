@@ -1,5 +1,6 @@
 version: 2.1
-
+orbs:
+  slack: circleci/slack@4.0
 jobs:
   build-frontend:
     docker:
@@ -10,6 +11,13 @@ jobs:
           name: build frontend
           command: |
             cd frontend && npm i && npm run build
+      - slack/notify:
+          event: fail
+          mentions: '@EngineeringTeam'
+          template: basic_fail_1
+      - slack/notify:
+          event: pass
+          template: success_tagged_deploy_1
 
   build-backend:
     docker:
@@ -49,7 +57,7 @@ jobs:
       - run:
           name: scan frontend
           command: |
-            cd frontend && npm i && npm run audit --audit-level=critical
+            cd frontend && npm i && npm audit --audit-level=critical
 
   scan-backend:
     docker:
@@ -59,7 +67,7 @@ jobs:
       - run:
           name: scan backend
           command: |
-            cd backend && npm i && npm run audit --audit-level=critical
+            cd backend && npm i && npm audit --audit-level=critical
 
 
 
