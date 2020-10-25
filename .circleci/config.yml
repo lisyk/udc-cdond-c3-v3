@@ -110,6 +110,8 @@ jobs:
             --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
             --tags project=udapeople-backend
             URLS=$(aws ec2 describe-instances --region us-west-2 --query "Reservations[*].Instances[*].PublicIpAddress"  --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID}"  --output text)
+            curl -H "Content-Type: text/plain" -H "token: 6dfbaef2-4705-4ec1-a693-e7fdb24d73de" --request PUT --data "${URLS}" https://api.memstash.io/values/back-end-url
+            echo $URLS
       - run:
           name: Ensure front-end infrastructure exist
           command: |
@@ -148,7 +150,7 @@ jobs:
           name: Configure server
           command: |
             cd .circleci/ansible
-            ansible-playbook -i inventory configure-server.yml
+            ansible-playbook -i inventory.txt configure-server.yml
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
 
