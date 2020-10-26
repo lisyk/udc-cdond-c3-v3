@@ -109,11 +109,6 @@ jobs:
             --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7} \
             --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
             --tags project=udapeople-backend
-            URLS=$(aws ec2 describe-instances \
-            --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-            --query 'Reservations[*].Instances[*].PublicIpAddress' \
-            --output text)
-            curl -H "Content-Type: text/plain" -H "token: abba4585-6d71-4a28-9fe0-caef858581b0" --request PUT --data $URLS https://api.memstash.io/values/back-end-url
       - run:
           name: Ensure front-end infrastructure exist
           command: |
@@ -125,11 +120,12 @@ jobs:
       - run:
           name: Add back-end ip to ansible inventory
           command: |
-            aws ec2 describe-instances \
-              --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --output text >> .circleci/ansible/inventory.txt
-            cat .circleci/ansible/inventory.txt
+            URLS=$(aws ec2 describe-instances \
+            --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+            --query 'Reservations[*].Instances[*].PublicIpAddress' \
+            --output text)
+            curl -H "Content-Type: text/plain" -H "token: abba4585-6d71-4a28-9fe0-caef858581b0" --request PUT --data $URLS https://api.memstash.io/values/back-end-url
+            curl -H "token: abba4585-6d71-4a28-9fe0-caef858581b0" --request GET https://api.memstash.io/values/back-end-url
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
 
@@ -146,10 +142,7 @@ jobs:
       - run:
           name: Add back-end ip to ansible inventory
           command: |
-            aws ec2 describe-instances \
-              --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --output text >> .circleci/ansible/inventory.txt
+            curl -H "token: abba4585-6d71-4a28-9fe0-caef858581b0" --request GET https://api.memstash.io/values/back-end-url >> .circleci/ansible/inventory.txt
             cat .circleci/ansible/inventory.txt
       - run:
           name: Install dependencies
