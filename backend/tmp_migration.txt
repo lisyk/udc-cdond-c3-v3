@@ -1,0 +1,25 @@
+
+> glee2@1.0.0 premigrations /Users/lisyk/Documents/work/Udacity/cloud-devops-eng/project3-CICD/final-project/v3/cdond-c3-projectstarter/backend
+> npm run build
+
+
+> glee2@1.0.0 build /Users/lisyk/Documents/work/Udacity/cloud-devops-eng/project3-CICD/final-project/v3/cdond-c3-projectstarter/backend
+> tsc
+
+
+> glee2@1.0.0 migrations /Users/lisyk/Documents/work/Udacity/cloud-devops-eng/project3-CICD/final-project/v3/cdond-c3-projectstarter/backend
+> ts-node -r dotenv/config node_modules/.bin/typeorm migration:run
+
+query: SELECT * FROM "information_schema"."tables" WHERE "table_schema" = current_schema() AND "table_name" = 'migrations'
+query: SELECT * FROM "migrations" "migrations" ORDER BY "id" DESC
+2 migrations are already loaded in the database.
+3 migrations were found in the source code.
+FixProductIdTable1549398619849 is the last executed migration. It was executed on Tue Feb 05 2019 15:30:19 GMT-0500 (Eastern Standard Time).
+1 migrations are new migrations that needs to be executed.
+query: START TRANSACTION
+query: CREATE TABLE "employee" ("id" SERIAL NOT NULL, "firstName" character varying(100) NOT NULL, "middleName" character varying(100), "lastName" character varying(100) NOT NULL, "secondLastName" character varying(100), "displayName" character varying(100), "companyEmail" character varying(50) NOT NULL DEFAULT '', "personalEmail" character varying(50) DEFAULT '', "birthdate" TIMESTAMP, "startDate" TIMESTAMP NOT NULL, "address" character varying(200), "phoneNumber" character varying(100), "bankName" character varying(100), "accountNumber" character varying(100), "gender" character varying, "tags" json NOT NULL DEFAULT '{}', "country" character varying(100) NOT NULL, "region" character varying(100) NOT NULL, "city" character varying(100) NOT NULL, "effectiveDate" TIMESTAMP NOT NULL, "salary" numeric NOT NULL, "salaryType" character varying NOT NULL, "isActive" boolean NOT NULL DEFAULT true, "workingHoursPerWeek" integer NOT NULL DEFAULT 40, CONSTRAINT "PK_3c2bc72f03fd5abbbc5ac169498" PRIMARY KEY ("id"))
+query: CREATE INDEX "IDX_1f9ea0b0e59e0d98ade4f2d5e9" ON "order_products_product" ("orderId") 
+query: CREATE INDEX "IDX_d6c66c08b9c7e84a1b657797df" ON "order_products_product" ("productId") 
+query: INSERT INTO "migrations"("timestamp", "name") VALUES ($1, $2) -- PARAMETERS: [1555722583168,"AddEmployee1555722583168"]
+Migration AddEmployee1555722583168 has been executed successfully.
+query: COMMIT
